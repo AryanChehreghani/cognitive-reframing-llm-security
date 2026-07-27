@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use or discuss this work, please cite the repository and the relevant manuscript."
+title: "Cognitive Reframing in LLM Security"
+type: software
+authors:
+  - family-names: "Chehreghani"
+    given-names: "Aryan"
+email: "aryanchehreghani@yahoo.com"
+year: 2026
+abstract: "Research-in-progress on Cognitive Reframing as a proposed attack family and faceted taxonomy for frame-conditioned semantic attacks against large language models."
+keywords:
+  - large language models
+  - LLM security
+  - jailbreak
+  - prompt injection
+  - semantic reframing
+  - red teaming
+  - AI safety
+license: "LicenseRef-Proprietary"
