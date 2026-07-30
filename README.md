@@ -34,6 +34,26 @@ Cognitive Reframing Attack Family
 
 Cross-cutting modifiers may include humor, professional role, contradiction, narrative length, professional register, and multi-turn priming. These modifiers are not treated as independent subfamilies unless future evidence supports that distinction.
 
+## Cross-model evidence matrix
+
+| Model | Forensic-Puzzle | Detective / Investigative | Historical | Counterfactual | Innocent-Reasoning | Other CRA |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| Claude | ✅ | ◐ | — | — | ◐ | — |
+| Grok | — | — | — | — | ◆ | — |
+| Qwen | ✅ | ✅ | — | — | — | — |
+| GLM | ✅ | ✅ | ✅ | — | — | — |
+| GPT | — | — | — | — | ✅ | — |
+| Kimi | — | — | — | — | — | ✅ |
+| DeepSeek | — | — | — | ✅ | — | — |
+| Gemini | — | — | — | — | ◆ | — |
+
+**Legend**
+
+- ✅ Confirmed successful evidence under the current evaluation criteria
+- ◐ Secondary or co-occurring CRA label within a successful case
+- ◆ Controlled demonstration using a synthetic or user-defined restriction
+- — No accepted evidence currently included
+
 ## Research status
 
 This work proposes a research hypothesis and taxonomy. It does **not** claim that a new top-level vulnerability class has already been validated or accepted by the security community. The pilot evidence motivates controlled testing using matched prompts, clean sessions, repeated trials, cross-model evaluation, blinded human review, and actionability-focused scoring.
