@@ -1,30 +1,60 @@
 # Cognitive Reframing in LLM Security
+### A Proposed Vulnerability Class & Root-Cause Weakness Framework for Large Language Models
 
-Research-in-progress on **Cognitive Reframing** as a proposed attack family for frame-conditioned semantic attacks against large language models.
+[![Research Status](https://img.shields.io/badge/Research-In--Progress-blue.svg)](#research-status)
+[![PoC Evidence](https://img.shields.io/badge/PoC%20Plates-99%20Documented-orange.svg)](#proof-of-concept)
+[![CWE Candidate Concept](https://img.shields.io/badge/CWE%20Candidate-Semantic%20Intent%20Validation-red.svg)](#proposed-cwe-candidate-concept)
+[![Taxonomy Scope](https://img.shields.io/badge/Model%20Families-7%20Tested-purple.svg)](#cross-model-evidence-matrix)
 
-This repository contains two companion manuscripts:
+Research investigating **Cognitive Reframing** as an attack mechanism and proposing **"Improper Decoupling of Contextual Framing from Semantic Intent"** as an independent root-cause weakness class in Large Language Models (LLMs).
 
-1. **Evidence-Grounded Pilot Study** — documents an initial screenshot-grounded observation of forensic-puzzle framing and defines a controlled evaluation plan.
-2. **Proposed Attack Family and Faceted Taxonomy** — defines Cognitive Reframing, its proposed core subfamilies, cross-cutting modifiers, boundaries, falsification criteria, and validation requirements.
+---
 
-## Repository structure
+## 🎯 Executive Summary & Research Hypothesis
+
+Traditional LLM security research primarily focuses on direct instruction conflicts, syntax-level prompt injections, system prompt leakages, and adversarial prefix generation.
+
+This research addresses a fundamental structural weakness in current safety alignment architectures:
+
+> **Root Hypothesis:** Existing LLM safety classifiers and guardrails fail to decouple *contextual wrappers* (role, narrative, historical setting, authority) from the *actionable risk of the underlying objective*. As a result, systematic changes in contextual framing produce materially different safety behavior and security bypasses for the exact same underlying intent.
+
+---
+
+## 🔎 Gap Analysis: Why Existing Standards Are Insufficient
+
+To establish this concept as a distinct weakness class (CWE candidate) and attack family (MITRE ATLAS candidate), this research explicitly differentiates it from existing categories:
+
+| Security Domain | Existing Classification | Why It Is Insufficient for Cognitive Reframing |
+| :--- | :--- | :--- |
+| **CWE Framework** | **`CWE-20`** (Improper Input Validation) | Focuses on syntax, data types, and length bounds. Reframed prompts are syntactically and semantically valid natural language, bypassing syntax checks entirely. |
+| **OWASP Top 10** | **`LLM01`** (Prompt Injection) | Focuses on instruction override and control-plane hijacking. Cognitive Reframing maintains semantic compliance with the prompt's frame rather than overriding instructions. |
+| **MITRE ATLAS** | **`AML.TA0000`** (Jailbreaking) | Treats jailbreaking as a monolithic outcome rather than isolating the underlying structural weakness in semantic context decoupling. |
+
+---
+
+## 🏷️ Model Shortcode Identifier Reference
+
+To ensure reproducibility across evidence dossiers, evaluation tables, and benchmark suites, model families are designated using standardized 3-letter identifiers:
+
+| Identifier | Model Family / Service | Vendor / Origin | Primary Tested Variants |
+| :--------: | :--------------------- | :-------------- | :---------------------- |
+| **`GPT`**  | ChatGPT / GPT Series   | OpenAI          | GPT-4o / GPT-4o-mini    |
+| **`CLD`**  | Claude                 | Anthropic       | Claude 3.5 Sonnet / Haiku |
+| **`DSK`**  | DeepSeek               | DeepSeek        | DeepSeek-V3 / R1        |
+| **`GMN`**  | Gemini                 | Google          | Gemini 1.5 Pro / Flash  |
+| **`QWN`**  | Qwen                   | Alibaba Cloud   | Qwen 2.5 Series         |
+| **`GLM`**  | GLM / Zhipu            | Zhipu AI        | GLM-4 Series            |
+| **`KPH`**  | Kimi (Prompt Handler)  | Moonshot AI     | Kimi K1.5 / Moonshot    |
+
+---
+
+## 🧬 Proposed Taxonomy: Cognitive Reframing Attack Family (CRA)
+
+The working taxonomy categorizes reframing techniques into distinct semantic subfamilies:
 
 ```text
-.
-├── papers/
-│   ├── Cognitive_Reframing_Evidence_Grounded_Pilot_Study.docx
-│   └── Cognitive_Reframing_Attack_Family_Taxonomy.docx
-├── CITATION.cff
-├── CONTRIBUTING.md
-├── ETHICS.md
-├── LICENSE_PENDING.md
-└── SHA256SUMS.txt
-```
-
-## Proposed taxonomy
-
-```text
-Cognitive Reframing Attack Family
+Cognitive Reframing Attack Family (CRA)
+│
 ├── Forensic-Puzzle Reframing
 ├── Detective / Investigative Reframing
 ├── Historical Reframing
@@ -32,46 +62,87 @@ Cognitive Reframing Attack Family
 └── Innocent-Reasoning Reframing
 ```
 
-Cross-cutting modifiers may include humor, professional role, contradiction, narrative length, professional register, and multi-turn priming. These modifiers are not treated as independent subfamilies unless future evidence supports that distinction.
+### Cross-Cutting Contextual Modifiers
 
-## Cross-model evidence matrix
+Modifiers influence the success rate of a frame change without acting as standalone subfamilies:
 
-| Model | Forensic-Puzzle | Detective / Investigative | Historical | Counterfactual | Innocent-Reasoning | Other CRA |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|
-| Claude | ✅ | ◐ | — | — | ◐ | — |
-| Grok | — | — | — | — | ◆ | — |
-| Qwen | ✅ | ✅ | — | — | — | — |
-| GLM | ✅ | ✅ | ✅ | — | — | — |
-| GPT | — | — | — | — | ✅ | — |
-| Kimi | — | — | — | — | — | ✅ |
-| DeepSeek | — | — | — | ✅ | — | — |
-| Gemini | — | — | — | — | ◆ | — |
+* **Professional Register & Authority** (e.g., Certifications, Law Enforcement)
+* **Narrative Complexity & Pacing** (e.g., Extended multi-turn priming)
+* **Linguistic/Data Transformations** (e.g., Code encodings, translation layers)
+* **Juxtaposition & Contradiction** (e.g., Historical puzzles, counterfactuals)
 
-**Legend**
+---
 
-- ✅ Confirmed successful evidence under the current evaluation criteria
-- ◐ Secondary or co-occurring CRA label within a successful case
-- ◆ Controlled demonstration using a synthetic or user-defined restriction
-- — No accepted evidence currently included
+## 📊 Empirical Evidence: Cross-Model Matrix
 
-## Research status
+The evaluation dossier documents empirical results across **99 testing plates** evaluated on clean session instances:
 
-This work proposes a research hypothesis and taxonomy. It does **not** claim that a new top-level vulnerability class has already been validated or accepted by the security community. The pilot evidence motivates controlled testing using matched prompts, clean sessions, repeated trials, cross-model evaluation, blinded human review, and actionability-focused scoring.
+| Model (`ID`) | Forensic-Puzzle | Detective / Investigative | Historical | Counterfactual | Innocent-Reasoning | Other CRA |
+| :----------- | :-------------: | :-----------------------: | :--------: | :------------: | :----------------: | :-------: |
+| **Claude** (`CLD`) | ✅ | ◐ | — | — | ◐ | — |
+| **Qwen** (`QWN`)   | ✅ | ✅ | — | — | — | — |
+| **GLM** (`GLM`)    | ✅ | ✅ | ✅ | — | — | — |
+| **GPT** (`GPT`)    | —  | —  | — | — | ✅ | — |
+| **Kimi** (`KPH`)   | —  | —  | — | — | —  | ✅ |
+| **DeepSeek** (`DSK`)| — | —  | — | ✅ | —  | — |
+| **Gemini** (`GMN`) | —  | —  | — | — | ◆  | — |
 
-## Responsible-use note
+### Legend
+* **`✅` Confirmed:** Documented safety guardrail bypass under controlled evaluation.
+* **`◐` Partial / Co-occurring:** Secondary reframing label present in a successful execution.
+* **`◆` Synthetic Constraint:** Bypass demonstrated under specific system-prompt constraints.
+* **`—` Unconfirmed:** No verified evidence currently included in the active test suite.
 
-The repository is intended for defensive AI-safety research, red teaming, evaluation, and mitigation design. Public examples should remain non-operational and should not materially lower the barrier to real-world wrongdoing. Potentially actionable reproductions should be handled through coordinated disclosure and controlled access.
+---
 
-## Author
+## 🛡️ Proposed Security Standards Alignment
+
+### 1. Proposed CWE Candidate Concept (Root-Cause Weakness)
+* **Proposed Title:** *Improper Decoupling of Contextual Framing from Semantic Intent in Safety Classifiers*
+* **Weakness Abstraction:** Base Level
+* **Description:** The system evaluates input safety by analyzing raw contextual wrappers alongside the requested objective, allowing benign context to mask malicious core intent.
+
+### 2. MITRE ATLAS & OWASP Mapping
+* **MITRE ATLAS:** Technique Candidate for *Contextual Reframing Jailbreak* (`AML.T0054` extension).
+* **OWASP LLM Top 10:** Direct mapping to `LLM01` (Prompt Injection) & `LLM07` (System Prompt Leakage / Guardrail Bypass).
+
+---
+
+## 🛠️ Actionable Mitigation Patterns
+
+To satisfy CWE requirements for remediable weaknesses, this research proposes three defense-in-depth architectural mitigations:
+
+1. **Multi-Stage Intent De-framing:** Stripping contextual wrappers (e.g., roles, historical scenarios) before passing the core prompt to safety alignment classifiers.
+2. **Context-Agnostic Intent Scoring:** Scoring the actionable risk of the objective independently of the stated persona or legitimate authority.
+3. **Dual-Classifier Consensus:** Employing independent classifiers trained specifically to detect semantic substitution and frame manipulation.
+
+---
+
+## 📂 Repository Structure
+
+```text
+.
+├── papers/
+│   ├── Cognitive_Reframing_Evidence_Grounded_Pilot_Study.docx
+│   └── Cognitive_Reframing_Attack_Family_Taxonomy.docx
+│
+├── proof-of-concept/
+│   └── Cognitive_Reframing_Multi_Model_PoC_Evidence_Dossier_Publication_Final.docx  # 99 Documented Plates
+│
+├── CITATION.cff
+├── CONTRIBUTING.md
+├── ETHICS.md
+├── LICENSE_PENDING.md
+└── SHA256SUMS.txt
+```
+
+---
+
+## 👤 Author & Contact
 
 **Aryan Chehreghani**  
-Independent Researcher  
-Contact: aryanchehreghani@yahoo.com
+*Independent Security Researcher — AI Safety & Red Teaming*  
+📧 **Contact:** [aryanchehreghani@yahoo.com](mailto:aryanchehreghani@yahoo.com)
 
-## Citation
-
-Citation metadata is available in [`CITATION.cff`](CITATION.cff).
-
-## License
-
-No reuse license has been granted yet. See [`LICENSE_PENDING.md`](LICENSE_PENDING.md).
+---
+*Notice: This repository is intended strictly for defensive AI safety research, red-teaming benchmark design, vulnerability disclosure, and security standard submissions.*
